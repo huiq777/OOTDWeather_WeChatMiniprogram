@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择穿搭风格 - 天气+OOTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f8fa;
+        }
+        
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .style-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .style-card.selected {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border: 2px solid #40a9ff;
+        }
+        
+        .style-card-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .style-card-title {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="miniprogram-container">
+        <!-- Status bar -->
+        <div class="status-bar">
+            <span>选择穿搭风格</span>
+        </div>
+        
+        <!-- Content area -->
+        <div class="content">
+            <div class="fade-in">
+                <h1 class="text-xl font-bold mb-4">选择今日穿搭风格</h1>
+                <p class="text-gray-500 mb-6">根据您的喜好和今日天气选择一种穿搭风格</p>
+                
+                <!-- Male styles -->
+                <div id="male-styles" class="style-grid">
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="运动休闲风">
+                        <img src="https://images.unsplash.com/photo-1552642986-ccb41e7059e7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c3BvcnR5JTIwc3R5bGV8ZW58MHx8MHx8fDA%3D" alt="运动休闲风" class="style-card-img">
+                        <div class="style-card-title">运动休闲风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="商务精英风">
+                        <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3MlMjBjYXN1YWx8ZW58MHx8MHx8fDA%3D" alt="商务精英风" class="style-card-img">
+                        <div class="style-card-title">商务精英风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="日系潮流风">
+                        <img src="https://images.unsplash.com/photo-1497551060073-4c5ab6435f12?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8amFwYW5lc2UlMjBmYXNoaW9ufGVufDB8fDB8fHww" alt="日系潮流风" class="style-card-img">
+                        <div class="style-card-title">日系潮流风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="韩系简约风">
+                        <img src="https://images.unsplash.com/photo-1650387982532-9b17cbead3dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGtvcmVhbiUyMGZhc2hpb258ZW58MHx8MHx8fDA%3D" alt="韩系简约风" class="style-card-img">
+                        <div class="style-card-title">韩系简约风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="学院风">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJlcHB5JTIwc3R5bGV8ZW58MHx8MHx8fDA%3D" alt="学院风" class="style-card-img">
+                        <div class="style-card-title">学院风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="街头嘻哈风">
+                        <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3RyZWV0d2VhcnxlbnwwfHwwfHx8MA%3D%3D" alt="街头嘻哈风" class="style-card-img">
+                        <div class="style-card-title">街头嘻哈风</div>
+                    </div>
+                </div>
+                
+                <!-- Female styles (hidden by default) -->
+                <div id="female-styles" class="style-grid hidden">
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="甜酷风">
+                        <img src="https://images.unsplash.com/photo-1614251055879-dd171c95edd5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZlbWFsZSUyMGZhc2hpb258ZW58MHx8MHx8fDA%3D" alt="甜酷风" class="style-card-img">
+                        <div class="style-card-title">甜酷风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="温柔风">
+                        <img src="https://images.unsplash.com/photo-1589451359791-f9c33af612a9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fGZlbWFsZSUyMGZhc2hpb258ZW58MHx8MHx8fDA%3D" alt="温柔风" class="style-card-img">
+                        <div class="style-card-title">温柔风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="学院风">
+                        <img src="https://images.unsplash.com/photo-1602452920335-6a132309c7c8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cHJlcHB5JTIwc3R5bGV8ZW58MHx8MHx8fDA%3D" alt="学院风" class="style-card-img">
+                        <div class="style-card-title">学院风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="韩系简约风">
+                        <img src="https://images.unsplash.com/photo-1570831739435-6601aa3fa4fb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8a29yZWFuJTIwZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D" alt="韩系简约风" class="style-card-img">
+                        <div class="style-card-title">韩系简约风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="复古文艺风">
+                        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZpbnRhZ2UlMjBmYXNoaW9ufGVufDB8fDB8fHww" alt="复古文艺风" class="style-card-img">
+                        <div class="style-card-title">复古文艺风</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyleCard(this)" data-style="Y2K风">
+                        <img src="https://images.unsplash.com/photo-1628776620361-2f32be1b6676?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8eTJrJTIwZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D" alt="Y2K风" class="style-card-img">
+                        <div class="style-card-title">Y2K风</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-full mt-8" onclick="confirmStyleSelection()">
+                    确认选择
+                </button>
+                
+                <button class="btn btn-full mt-4 bg-gray-200 text-gray-700" onclick="goBack()">
+                    返回
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        let selectedStyle = null;
+        
+        // On page load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Load user profile to determine gender
+            const profile = loadUserProfile();
+            
+            // Show appropriate style options based on gender
+            if (profile.gender === 'female') {
+                document.getElementById('male-styles').classList.add('hidden');
+                document.getElementById('female-styles').classList.remove('hidden');
+            }
+        });
+        
+        function selectStyleCard(card) {
+            // Remove selected class from all cards
+            const cards = document.querySelectorAll('.style-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            
+            // Add selected class to clicked card
+            card.classList.add('selected');
+            
+            // Save selected style
+            selectedStyle = card.getAttribute('data-style');
+        }
+        
+        function confirmStyleSelection() {
+            if (!selectedStyle) {
+                alert('请选择一种穿搭风格');
+                return;
+            }
+            
+            // In a real app, we would save this selection
+            localStorage.setItem('selectedStyle', selectedStyle);
+            
+            // Redirect to OOTD page
+            window.location.href = 'ootd-result.html';
+        }
+        
+        function goBack() {
+            window.location.href = 'ootd.html';
+        }
+    </script>
+</body>
+</html> 

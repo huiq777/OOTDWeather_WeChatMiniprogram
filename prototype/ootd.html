@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOTD - 天气+OOTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f8fa;
+        }
+        
+        .weather-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .weather-metric {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-top: 4px;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .close-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .weather-card {
+            background: linear-gradient(to bottom, #4a90e2, #62b5f0);
+            color: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-icon {
+            font-size: 36px;
+            color: #ffcc00;
+            display: inline-block;
+            vertical-align: bottom;
+            margin-left: 10px;
+        }
+
+        .temp-range {
+            font-size: 14px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .main-temp {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+            color: white;
+            display: flex;
+            align-items: flex-end;
+            font-weight: 300;
+        }
+        
+        .temperature {
+            color: #ffffff;
+            font-size: 72px;
+            line-height: 1;
+            font-weight: 300;
+            letter-spacing: -1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .weather-condition {
+            margin-bottom: 5px;
+        }
+        
+        /* Fixed-height popup styles */
+        .fixed-popup {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 24px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            height: 80vh;
+            max-height: 600px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fixed-popup.visible {
+            transform: translateY(0);
+        }
+        
+        .fixed-popup-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px; /* Allow for scrollbar */
+        }
+        
+        .fixed-carousel {
+            height: 180px;
+            margin: 12px 0;
+        }
+        
+        .fixed-carousel-item img {
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        /* Optional - prevent body scrolling when popup is open */
+        body.popup-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="miniprogram-container">
+        <!-- Status bar -->
+        <div class="status-bar">
+            <span>OOTD</span>
+        </div>
+        
+        <!-- Content area -->
+        <div class="content">
+            <!-- Today's Weather Card -->
+            <div class="card fade-in">
+                <div class="card-title">今日天气</div>
+                <div class="weather-card">
+                    <h2 class="text-xl font-bold" id="city-name">北京</h2>
+                    <p class="text-sm">2025年4月15日 星期二</p>
+                    <div class="temp-range" id="temp-range">11° / 19°</div>
+                    <div class="main-temp">
+                        <span class="temperature">16</span>°
+                        <div class="weather-icon">
+                            <i id="weather-icon" class="fas fa-cloud"></i>
+                        </div>
+                    </div>
+                    <p class="weather-condition" id="weather-condition">阴天 · 湿度 <span class="humidity-value">65</span>%</p>
+                </div>
+                
+                <div class="weather-metrics">
+                    <div class="weather-metric">
+                        <div class="metric-label">湿度</div>
+                        <div class="metric-value humidity-value">45%</div>
+                    </div>
+                    <div class="weather-metric">
+                        <div class="metric-label">风速</div>
+                        <div class="metric-value wind-value">3.5 m/s</div>
+                    </div>
+                    <div class="weather-metric">
+                        <div class="metric-label">降水概率</div>
+                        <div class="metric-value rain-value">10%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7-Day Forecast Card -->
+            <div class="card slide-up">
+                <div class="card-title">近7日天气</div>
+                <div class="forecast-item">
+                    <div class="forecast-day">今天</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                        <span class="forecast-temp">25°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周二</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                        <span class="forecast-temp">22°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周三</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-cloud-sun text-gray-400"></i>
+                        <span class="forecast-temp">19°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周四</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-cloud-rain text-blue-400"></i>
+                        <span class="forecast-temp">18°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周五</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-cloud-sun text-gray-400"></i>
+                        <span class="forecast-temp">20°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周六</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                        <span class="forecast-temp">23°C</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-day">周日</div>
+                    <div class="forecast-details">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                        <span class="forecast-temp">24°C</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OOTD Card -->
+            <div class="card slide-up">
+                <div class="card-title">今日穿搭风格</div>
+                <div id="style-options" class="mb-4">
+                    <!-- Options will be populated based on gender -->
+                </div>
+                
+                <button class="btn btn-full" onclick="generateOOTD()">
+                    生成今日OOTD
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tab bar -->
+        <div class="tab-bar">
+            <div class="tab-item active" onclick="switchTab('ootd')">
+                <i class="fas fa-tshirt tab-icon"></i>
+                <span>OOTD</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('profile')">
+                <i class="fas fa-user tab-icon"></i>
+                <span>我的</span>
+            </div>
+        </div>
+        
+        <!-- OOTD Popup -->
+        <div class="popup-mask" id="ootd-popup-mask" onclick="togglePopup('ootd-popup')"></div>
+        <div class="fixed-popup" id="ootd-popup">
+            <div class="popup-header">
+                <h3 class="text-lg font-bold">今日OOTD推荐</h3>
+                <div class="close-btn" onclick="togglePopup('ootd-popup')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            
+            <div class="fixed-popup-content">
+                <!-- Style Basis -->
+                <p class="text-sm text-gray-600 mb-3" id="style-basis">
+                    基于当前天气和你选择的「<span id="selected-style-name">甜酷风</span>」风格
+                </p>
+                
+                <!-- Outfit Suggestion -->
+                <div class="outfit-suggestion mb-4">
+                    <div class="suggestion-header">
+                        <div class="lightbulb-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="suggestion-title">穿搭建议</div>
+                    </div>
+                    <p id="ootd-recommendation" class="text-sm text-gray-700">
+                        今天北京天气晴朗，温度在12-22°C之间，建议穿着轻薄外套搭配长裤。甜酷风可以选择oversized卫衣配高腰牛仔裤，脚踩厚底运动鞋，搭配棒球帽和链条包，既保暖又时尚。
+                    </p>
+                </div>
+                
+                <div class="carousel fixed-carousel" id="ootd-carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item fixed-carousel-item">
+                            <img src="https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?q=80&w=1965&auto=format&fit=crop" alt="黄色卫衣搭配">
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <div class="carousel-indicator active"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        // Load user profile
+        const userProfile = loadUserProfile();
+        
+        // Format current date in Chinese
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        
+        const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+        const weekDay = weekDays[now.getDay()];
+        
+        // Format date like "2023年11月15日 星期三"
+        const formattedDate = `${year}年${month}月${day}日 星期${weekDay}`;
+        
+        // Update date in card
+        const dateElement = document.querySelector('.weather-card p.text-sm');
+        if (dateElement) {
+            dateElement.textContent = formattedDate;
+        }
+        
+        // Update weather data based on user's location
+        updateWeatherData();
+        
+        // Update forecast with dynamic weather icons
+        updateForecast();
+        
+        // Load style options based on user gender
+        populateStyleOptions();
+        
+        // Override toggle popup function to handle fixed popup
+        function togglePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            const mask = document.getElementById(popupId + '-mask');
+            
+            if (popup.classList.contains('visible')) {
+                popup.classList.remove('visible');
+                mask.classList.remove('visible');
+                document.body.classList.remove('popup-open');
+            } else {
+                popup.classList.add('visible');
+                mask.classList.add('visible');
+                document.body.classList.add('popup-open');
+            }
+        }
+    </script>
+</body>
+</html> 

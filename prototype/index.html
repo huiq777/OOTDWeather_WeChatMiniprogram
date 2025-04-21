@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气+OOTD小程序原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .prototype-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .device {
+            width: 430px;
+            height: 932px;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            margin: 20px;
+            display: inline-block;
+        }
+        .device iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-container">
+        <h1 class="text-3xl font-bold text-center my-8">天气+OOTD小程序原型</h1>
+        
+        <div class="flex flex-wrap justify-center">
+            <div class="text-center">
+                <h2 class="text-xl font-semibold">引导页</h2>
+                <div class="device">
+                    <iframe src="onboarding.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-xl font-semibold">OOTD首页</h2>
+                <div class="device">
+                    <iframe src="ootd.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-xl font-semibold">OOTD选择风格</h2>
+                <div class="device">
+                    <iframe src="ootd-style.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-xl font-semibold">OOTD生成结果</h2>
+                <div class="device">
+                    <iframe src="ootd-result.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-xl font-semibold">我的页面</h2>
+                <div class="device">
+                    <iframe src="profile.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

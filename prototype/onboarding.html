@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎使用天气+OOTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f8fa;
+        }
+        
+        .gender-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .gender-button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 2px solid transparent;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .gender-button.selected {
+            background-color: #e6f7ff;
+            border-color: #40a9ff;
+            color: #40a9ff;
+        }
+
+        .weather-demo-card {
+            background: linear-gradient(to bottom, #4a90e2, #62b5f0);
+            color: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-icon {
+            font-size: 36px;
+            color: #ffcc00;
+            display: inline-block;
+            vertical-align: bottom;
+            margin-left: 10px;
+        }
+
+        .temp-range {
+            font-size: 14px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .main-temp {
+            font-size: 48px;
+            font-weight: 300;
+            margin: 15px 0 5px 0;
+            color: white;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .temperature {
+            color: #ffffff;
+            font-size: 72px;
+            line-height: 1;
+            font-weight: 300;
+            letter-spacing: -1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .weather-condition {
+            margin-bottom: 5px;
+        }
+        
+        .onboarding-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .miniprogram-container {
+            background-color: white;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .content {
+            background-color: #f7f8fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="miniprogram-container">
+        <!-- Status bar -->
+        <div class="status-bar">
+            <span>天气+OOTD</span>
+        </div>
+        
+        <!-- Content area -->
+        <div class="content fade-in">
+            <div class="slide-up" style="padding: 16px;">
+                <h1 class="text-2xl font-bold text-center mb-4">欢迎使用天气+OOTD</h1>
+                
+                <!-- Weather Demo Card -->
+                <div class="weather-demo-card">
+                    <h2 class="text-xl font-bold" id="city-name">SS</h2>
+                    <p class="text-sm">2025年4月15日 星期二</p>
+                    <div class="temp-range" id="temp-range">11° / 19°</div>
+                    <div class="main-temp">
+                        <span class="temperature">16</span>°
+                        <div class="weather-icon">
+                            <i id="weather-icon" class="fas fa-cloud"></i>
+                        </div>
+                    </div>
+                    <p class="weather-condition" id="weather-condition">阴天 · 湿度 <span class="humidity-value">65</span>%</p>
+                </div>
+                
+                <div class="onboarding-card">
+                    <h2 class="text-lg font-bold mb-4">开始使用前，请完善您的信息</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">所在城市</label>
+                        <input type="text" id="city" class="form-input" placeholder="例如：北京、上海、广州">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">性别</label>
+                        <input type="hidden" id="gender" value="">
+                        <div class="gender-buttons">
+                            <div class="gender-button" onclick="selectGender('male', this)">
+                                男生
+                            </div>
+                            <div class="gender-button" onclick="selectGender('female', this)">
+                                女生
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">个人描述（身高、体型等）</label>
+                        <textarea id="description" class="form-input" rows="3" placeholder="例如：175cm，偏瘦，适合穿宽松款式"></textarea>
+                    </div>
+                    
+                    <button class="btn btn-full mt-6" onclick="saveUserProfile()">
+                        完成设置
+                    </button>
+                </div>
+                
+                <p class="text-center text-gray-500 mt-6">
+                    完成设置后，我们将为您提供个性化的穿搭推荐
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        // Initialize the weather demo card
+        // initWeatherDemoCard();
+        
+        // Set the weather display directly
+        const cityElement = document.getElementById('city-name');
+        if (cityElement) {
+            cityElement.textContent = 'SS';
+        }
+        
+        const tempRangeElement = document.getElementById('temp-range');
+        if (tempRangeElement) {
+            tempRangeElement.textContent = '11° / 19°';
+        }
+        
+        const temperatureElement = document.querySelector('.temperature');
+        if (temperatureElement) {
+            temperatureElement.textContent = '16';
+        }
+        
+        const weatherIconElement = document.getElementById('weather-icon');
+        if (weatherIconElement) {
+            weatherIconElement.className = 'fas fa-cloud';
+        }
+        
+        const weatherConditionElement = document.getElementById('weather-condition');
+        if (weatherConditionElement) {
+            weatherConditionElement.innerHTML = '阴天 · 湿度 <span class="humidity-value">65</span>%';
+        }
+        
+        function selectGender(gender, button) {
+            // Set the hidden input value
+            document.getElementById('gender').value = gender;
+            
+            // Remove selected class from all buttons
+            const buttons = document.querySelectorAll('.gender-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+        }
+    </script>
+</body>
+</html> 

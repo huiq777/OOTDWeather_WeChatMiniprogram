@@ -1,0 +1,472 @@
+/* Common styles for mini program pages */
+.miniprogram-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background-color: #f7f8fa;
+}
+
+/* Status bar */
+.status-bar {
+    height: 44px;
+    background-color: #ffffff;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Tab bar */
+.tab-bar {
+    height: 60px;
+    background-color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    border-top: 1px solid #f0f0f0;
+}
+
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.tab-item.active {
+    color: #40a9ff;
+}
+
+.tab-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+/* Content area */
+.content {
+    padding: 16px;
+    position: absolute;
+    top: 44px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #40a9ff;
+    color: #ffffff;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+}
+
+.btn:hover {
+    background-color: #1890ff;
+}
+
+.btn-full {
+    display: block;
+    width: 100%;
+}
+
+/* Weather icons and styles */
+.weather-icon {
+    font-size: 48px;
+    margin-right: 16px;
+    color: #ffc53d;
+}
+
+.temperature {
+    font-size: 48px;
+    font-weight: 700;
+    color: #333;
+}
+
+.temperature-unit {
+    font-size: 24px;
+    font-weight: 500;
+    margin-left: 4px;
+    color: #666;
+}
+
+.weather-detail {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.weather-detail i {
+    margin-right: 6px;
+}
+
+/* OOTD styles */
+.style-option {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background-color: #f0f5ff;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.style-option.selected {
+    background-color: #e6f7ff;
+    border-color: #40a9ff;
+    color: #40a9ff;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 24px;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.popup.visible {
+    transform: translateY(0);
+}
+
+.popup-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+
+.popup-mask.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Carousel */
+.carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    margin: 16px 0;
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.3s;
+}
+
+.carousel-item {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.carousel-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+    margin: 0 4px;
+    transition: background-color 0.3s;
+}
+
+.carousel-indicator.active {
+    background-color: #40a9ff;
+}
+
+/* Form inputs */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #d9d9d9;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #40a9ff;
+    outline: none;
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #d9d9d9;
+    font-size: 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8.825L1.175 4 2.238 2.938 6 6.7 9.763 2.938 10.825 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: border-color 0.3s;
+}
+
+.form-select:focus {
+    border-color: #40a9ff;
+    outline: none;
+}
+
+/* Onboarding */
+.onboarding-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+}
+
+.onboarding-card {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Weather forecast */
+.forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.forecast-item:last-child {
+    border-bottom: none;
+}
+
+.forecast-day {
+    font-weight: 500;
+    color: #333;
+}
+
+.forecast-details {
+    display: flex;
+    align-items: center;
+}
+
+.forecast-temp {
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* Fixed-height popup styles */
+.fixed-popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px 24px;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+    height: 85%;
+    max-height: 85%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.fixed-popup.visible {
+    transform: translateY(0);
+}
+
+.fixed-popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px; /* Allow for scrollbar */
+}
+
+.popup-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    position: relative;
+    text-align: center;
+}
+
+.popup-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #666;
+}
+
+#style-basis {
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.lightbulb-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    font-size: 11px;
+}
+
+#ootd-recommendation {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    margin-top: 6px;
+}
+
+.outfit-suggestion {
+    margin-bottom: 15px;
+}
+
+.suggestion-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.suggestion-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.fixed-carousel {
+    height: 62%;
+    margin: 0 -20px;
+    border-radius: 0;
+}
+
+.fixed-carousel-item {
+    height: 100%;
+}
+
+.fixed-carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Optional - prevent body scrolling when popup is open */
+body.popup-open {
+    overflow: hidden;
+} 

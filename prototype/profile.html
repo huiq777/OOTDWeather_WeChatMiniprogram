@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 - 天气+OOTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f8fa;
+        }
+        
+        .profile-header {
+            padding: 24px 16px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            overflow: hidden;
+        }
+        
+        .profile-avatar i {
+            font-size: 40px;
+            color: #bfbfbf;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .profile-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: #ffffff;
+            margin-bottom: 1px;
+            font-size: 16px;
+        }
+        
+        .menu-icon {
+            width: 24px;
+            margin-right: 12px;
+            color: #40a9ff;
+        }
+        
+        .menu-arrow {
+            margin-left: auto;
+            color: #bfbfbf;
+        }
+        
+        .gender-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .gender-button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 2px solid transparent;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .gender-button.selected {
+            background-color: #e6f7ff;
+            border-color: #40a9ff;
+            color: #40a9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="miniprogram-container">
+        <!-- Status bar -->
+        <div class="status-bar">
+            <span>我的</span>
+        </div>
+        
+        <!-- Content area -->
+        <div class="content fade-in">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">用户信息</div>
+                    <div id="profile-city" class="profile-desc">城市：加载中...</div>
+                    <div id="profile-gender" class="profile-desc">性别：加载中...</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">个人描述</div>
+                <p id="profile-description" class="text-gray-700">加载中...</p>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item" onclick="editProfile()">
+                    <i class="fas fa-edit menu-icon"></i>
+                    <span>编辑个人信息</span>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-history menu-icon"></i>
+                    <span>历史穿搭记录</span>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-cog menu-icon"></i>
+                    <span>设置</span>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-question-circle menu-icon"></i>
+                    <span>帮助与反馈</span>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-info-circle menu-icon"></i>
+                    <span>关于</span>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Edit Profile Popup -->
+        <div class="popup-mask" id="edit-popup-mask" onclick="togglePopup('edit-popup')"></div>
+        <div class="popup" id="edit-popup">
+            <h3 class="text-xl font-bold mb-4">编辑个人信息</h3>
+            
+            <div class="form-group">
+                <label class="form-label">所在城市</label>
+                <input type="text" id="city" class="form-input" placeholder="例如：北京、上海、广州">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">性别</label>
+                <input type="hidden" id="gender" value="">
+                <div class="gender-buttons">
+                    <div class="gender-button" id="male-button" onclick="selectGender('male', this)">
+                        男生
+                    </div>
+                    <div class="gender-button" id="female-button" onclick="selectGender('female', this)">
+                        女生
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">个人描述（身高、体型等）</label>
+                <textarea id="description" class="form-input" rows="3" placeholder="例如：175cm，偏瘦，适合穿宽松款式"></textarea>
+            </div>
+            
+            <button class="btn btn-full mt-4" onclick="saveProfile()">
+                保存
+            </button>
+            
+            <button class="btn btn-full mt-4 bg-gray-200 text-gray-700" onclick="togglePopup('edit-popup')">
+                取消
+            </button>
+        </div>
+        
+        <!-- Tab bar -->
+        <div class="tab-bar">
+            <div class="tab-item" onclick="switchTab('ootd')">
+                <i class="fas fa-tshirt tab-icon"></i>
+                <span>OOTD</span>
+            </div>
+            <div class="tab-item active" onclick="switchTab('profile')">
+                <i class="fas fa-user tab-icon"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        // On page load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Load user profile
+            const profile = loadUserProfile();
+            
+            // Update profile display
+            document.getElementById('profile-city').textContent = '城市：' + (profile.city || '未设置');
+            
+            let genderText = '未设置';
+            if (profile.gender === 'male') {
+                genderText = '男生';
+            } else if (profile.gender === 'female') {
+                genderText = '女生';
+            }
+            document.getElementById('profile-gender').textContent = '性别：' + genderText;
+            
+            document.getElementById('profile-description').textContent = profile.description || '未设置个人描述';
+        });
+        
+        function selectGender(gender, button) {
+            // Set the hidden input value
+            document.getElementById('gender').value = gender;
+            
+            // Remove selected class from all buttons
+            const buttons = document.querySelectorAll('.gender-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+        }
+        
+        function editProfile() {
+            // Load current values into form
+            const profile = loadUserProfile();
+            
+            // Select the appropriate gender button
+            if (profile.gender === 'male') {
+                selectGender('male', document.getElementById('male-button'));
+            } else if (profile.gender === 'female') {
+                selectGender('female', document.getElementById('female-button'));
+            }
+            
+            // Show edit popup
+            togglePopup('edit-popup');
+        }
+        
+        function saveProfile() {
+            // Save user profile
+            saveUserProfile();
+            
+            // Update display
+            const profile = loadUserProfile();
+            document.getElementById('profile-city').textContent = '城市：' + (profile.city || '未设置');
+            
+            let genderText = '未设置';
+            if (profile.gender === 'male') {
+                genderText = '男生';
+            } else if (profile.gender === 'female') {
+                genderText = '女生';
+            }
+            document.getElementById('profile-gender').textContent = '性别：' + genderText;
+            
+            document.getElementById('profile-description').textContent = profile.description || '未设置个人描述';
+            
+            // Hide edit popup
+            togglePopup('edit-popup');
+        }
+    </script>
+</body>
+</html> 
